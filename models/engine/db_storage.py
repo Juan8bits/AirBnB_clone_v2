@@ -36,19 +36,16 @@ class DBStorage():
         """ Method that return a dictionary with all cls objects
             or if cls is None, all objects in the database.
         """
-        dic_ob = {}
-        info = self.__session.query(State, City).all()  # Make sure!
+        if type(cls) == str:
+            cls = eval(cls)
+        mods = [State, City]
         if cls is None:
-            for i in info:
-                for j in i:
-                    dic_ob[j.__class__.__name__ + '.' + j.id] = j
+            info = []
+            for icls in mods:
+                info.extend(self.__session.query(icls).all())  # Make sure!
         else:
-            for i in info:
-                for j in i:
-                    print("{} == a {}".format(j.__class__.__name__, cls))
-                    if (j.__class__.__name__ == cls):
-                        dic_ob[j.__class__.__name__ + '.' + j.id] = j
-        return dic_ob
+            info = self.__session.query(cls)
+        return {"{}.{}".format(j.__class__.__name__, j.id): j for j in info}
 
     def new(self, obj):
         """ Add the object to the current database session """
