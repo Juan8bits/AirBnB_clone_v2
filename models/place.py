@@ -1,9 +1,21 @@
 #!/usr/bin/python3
 """ Place Module for HBNB project """
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, Integer, String, Float, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, MetaData
+from sqlalchemy import Table
 from sqlalchemy.orm import relationship
 import os
+
+place_amenity = Table('place_amenity', Base.metadata,
+                      Column("place_id", String(60),
+                             ForeignKey("places.id"),
+                             primary_key=True,
+                             nullable=False),
+                      Column("amenity_id", String(60),
+                             ForeignKey("amenities.id"),
+                             primary_key=True,
+                             nullable=False)
+                      )
 
 
 class Place(BaseModel, Base):
@@ -22,6 +34,8 @@ class Place(BaseModel, Base):
     if os.getenv("HBNB_TYPE_STORAGE") == "db":
         reviews = relationship('Review', backref='place',
                                cascade='all, delete')
+        amenities = relationship("Amenity", secondary=place_amenity,
+                                 backref="place", viewonly=False)
     else:
         @property
         def reviews(self):
@@ -32,3 +46,19 @@ class Place(BaseModel, Base):
                 if self.id == i.state_id:
                     list_reviews.append(i)
             return list_reviews
+
+        @property
+        def amenities(self):
+            """Getter for amenities with FileStorage engine"""
+            amenities = models.sotrage.all(Amenity)
+            list_amenity = []
+            for i in amenities.values():
+                if self.id == i.amenity_ids:
+                    list_amenity.append(i)
+            return list_amenity
+
+        @amenities.setter
+        def amenities(self, value):
+            """ Setter for amenities method"""
+            if type(value) is Amenity:
+                amenities.append(value)
