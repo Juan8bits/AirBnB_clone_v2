@@ -38,7 +38,7 @@ class DBStorage():
         """
         if type(cls) == str:
             cls = eval(cls)
-        mods = [State, City]
+        mods = [State, City, User, Place, Review]
         if cls is None:
             info = []
             for icls in mods:
@@ -65,5 +65,7 @@ class DBStorage():
     def reload(self):
         """ Reload objects from DB"""
         Base.metadata.create_all(self.__engine)
-        Session = sessionmaker(bind=self.__engine, expire_on_commit=False)
-        self.__session = scoped_session(Session)
+        session_factory = sessionmaker(
+            bind=self.__engine, expire_on_commit=False)
+        Session = scoped_session(session_factory)
+        self.__session = Session()
