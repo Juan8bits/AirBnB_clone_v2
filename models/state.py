@@ -18,6 +18,7 @@ class State(BaseModel, Base):
     else:
         @property
         def cities(self):
+        """ Getter cities """
             cities = models.storage.all(City)
             list_cities = []
             for i in cities.values():
