@@ -34,9 +34,10 @@ class FileStorage:
             json.dump(temp, f)
 
     def delete(self, obj=None):
-        """Delete obj from __objects if it’s inside
-        if obj is equal to None, the method should 
-        not do anything"""
+        """ Delete obj from __objects if it’s inside
+            if obj is equal to None, the method should
+            not do anything
+        """
         if obj is not None and obj in FileStorage.__objects.values():
             k = obj.__class__.__name__ + '.' + obj.id
             FileStorage.__objects.pop(k)
