@@ -20,7 +20,8 @@ def hbnb_page():
 @app.route('/c/<text>')
 def c_page(text):
     """ Redirection for '/c/ page and returning a variable. '"""
-    return ('C {}'.format(text))
+    text = text.replace("_", " ")
+    return ('C{}'.format(text))
 
 
 if __name__ == '__main__':
