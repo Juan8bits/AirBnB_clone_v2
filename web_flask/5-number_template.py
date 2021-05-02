@@ -42,11 +42,11 @@ def number_page(n):
 
 
 @app.route('/number_template/<int:n>')
-def number_template(number):
+def number_template(n):
     """ Redirection for /number_templat page and return HTML with a number
         only if is integer.
     """
-    return render_template('5-number.html', n=number)
+    return render_template('5-number.html', number=n)
 
 
 if __name__ == '__main__':
